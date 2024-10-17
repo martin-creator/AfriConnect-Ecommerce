@@ -1,63 +1,45 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <!-- Header-->
-        <header class="bg-warning py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-dark">
-                    <h1 class="display-4 fw-bolder">About Us</h1>
-                    <p class="lead fw-normal text-dark mb-0">Welcome To AfriConnect E-commerce Platform</p>
-                </div>
-            </div>
-        </header>
-
-        <div class="container">
-        	<div class="row">
-        		<center>
-        			<div class="col-8">
-        				<br/><br/>
-                    <p class="h2 fw-bolder">Our Mission</p>
-                    <p align="justify">
-                        To revolutionize delivery services across Africa by connecting small
-                        and medium enterprises with reliable and efficient couriers.
-                    </p>
-                    <br/><br/>
-                    <p class="h2 fw-bolder">Our Vision</p>
-                    <p align="justify">
-                        To become the leading delivery platform in Africa, fostering growth
-                                and connectivity for businesses and communities.
-                    </p>
-                    <br/><br/>
-                    <p class="h2 fw-bolder">Our Core Values</p>
-                    <div align="center">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                            <strong>Reliability</strong>: Ensuring timely and dependable
-                            delivery services.
-                            </li>
-                            <li class="list-group-item">
-                            <strong>Innovation</strong>: Continuously improving our platform
-                            to meet the evolving needs of our users.
-                            </li>
-                            <li class="list-group-item">
-                            <strong>Customer Focus</strong>: Putting the needs of our
-                            customers at the forefront of everything we do.
-                            </li>
-                            <li class="list-group-item">
-                            <strong>Integrity</strong>: Conducting our business with honesty
-                            and transparency.
-                            </li>
-                            <li class="list-group-item">
-                            <strong>Community</strong>: Supporting the growth and development
-                            of local businesses and communities.
-                            </li>
-                        </ul>
-                                        
-                    </div>
-                    <br/><br/>
-        			</div>
-        		</center>
-        	</div>
+<header class="bg-yellow-400 py-5">
+    <div class="container mx-auto my-5">
+        <div class="text-center text-gray-800">
+            <h1 class="text-4xl font-bold">About Us</h1>
+            <p class="text-lg font-normal text-gray-600 mb-0">Welcome To AfriConnect E-commerce Platform</p>
         </div>
+    </div>
+</header>
+
+<div class="container mx-auto">
+    <div class="row justify-center">
+        <div class="col-8 text-center">
+            <div class="py-5">
+                <p class="text-2xl font-bold">Our Mission</p>
+                <p class="text-lg text-gray-700" align="justify">
+                    To revolutionize delivery services across Africa by connecting small and medium enterprises with reliable and efficient couriers.
+                </p>
+                <br />
+                <p class="text-2xl font-bold">Our Vision</p>
+                <p class="text-lg text-gray-700" align="justify">
+                    To become the leading delivery platform in Africa, fostering growth and connectivity for businesses and communities.
+                </p>
+                <br />
+                <p class="text-2xl font-bold">Our Core Values</p>
+                <div class="mx-auto">
+                    <ul class="list-disc list-inside space-y-2 text-left">
+                        <li><strong>Reliability</strong>: Ensuring timely and dependable delivery services.</li>
+                        <li><strong>Innovation</strong>: Continuously improving our platform to meet the evolving needs of our users.</li>
+                        <li><strong>Customer Focus</strong>: Putting the needs of our customers at the forefront of everything we do.</li>
+                        <li><strong>Integrity</strong>: Conducting our business with honesty and transparency.</li>
+                        <li><strong>Community</strong>: Supporting the growth and development of local businesses and communities.</li>
+                    </ul>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

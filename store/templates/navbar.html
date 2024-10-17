@@ -1,73 +1,85 @@
-<!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light bg-warning">
-    <div class="container px-4 px-lg-5">
-        <a class="navbar-brand h1" href="{% url 'home' %}">AfriConnect</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a></li>
-                <li class="nav-item"><a class="nav-link active" href="{% url 'about' %}">About</a></li>
+<!-- Navigation -->
+<nav class="bg-warning p-4">
+    <div class="container mx-auto flex items-center justify-between">
+        <a class="text-2xl font-bold text-dark" href="{% url 'home' %}">AfriConnect</a>
+        <button class="block lg:hidden text-dark" id="navbar-toggler">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
+        <div class="hidden lg:flex lg:items-center lg:space-x-4" id="navbar-content">
+            <ul class="flex flex-col lg:flex-row lg:space-x-4">
+                <li><a class="text-dark hover:underline" href="{% url 'home' %}">Home</a></li>
+                <li><a class="text-dark hover:underline" href="{% url 'about' %}">About</a></li>
 
-    {% if user.is_authenticated %}
-      
-<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
-    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <li><a class="dropdown-item" href="{% url 'update_user' %}">User Profile</a></li>
-        <li><hr class="dropdown-divider" /></li>
-<li><a class="dropdown-item" href="{% url 'update_info'  %}">User Info</a></li>
+                {% if user.is_authenticated %}
+                <li class="relative group">
+                    <a class="text-dark hover:underline cursor-pointer">Profile</a>
+                    <ul class="absolute left-0 mt-2 hidden w-48 bg-white rounded-md shadow-lg group-hover:block">
+                        <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'update_user' %}">User Profile</a></li>
+                        <li><hr class="border-gray-300"></li>
+                        <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'update_info' %}">User Info</a></li>
                     </ul>
                 </li>
-    {% if user.is_superuser %}
-      <li class="nav-item dropdown">
-    
-    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Orders</a>
-    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <li><a class="dropdown-item" href="{% url 'shipped_dash' %}">Shipped Orders</a></li>
-        <li><hr class="dropdown-divider" /></li>
-<li><a class="dropdown-item" href="{% url 'not_shipped_dash'  %}">UnShipped Orders</a></li>
+                {% if user.is_superuser %}
+                <li class="relative group">
+                    <a class="text-dark hover:underline cursor-pointer">Orders</a>
+                    <ul class="absolute left-0 mt-2 hidden w-48 bg-white rounded-md shadow-lg group-hover:block">
+                        <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'shipped_dash' %}">Shipped Orders</a></li>
+                        <li><hr class="border-gray-300"></li>
+                        <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'not_shipped_dash' %}">UnShipped Orders</a></li>
                     </ul>
                 </li>
-    {% endif %}
-
-
-       <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-    {% else %}
-       <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-
-       <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-
-    {% endif %}
-
-                
-
-
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'category_summary' %}">All Products</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-<li><a class="dropdown-item" href="{% url 'category' 'Programming-Books' %}">Programming Books</a></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'Marketing-Books' %}">Marketing Books</a></li>
+                {% endif %}
+                <li><a class="text-dark hover:underline" href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                <li><a class="text-dark hover:underline" href="{% url 'login' %}">Login</a></li>
+                <li><a class="text-dark hover:underline" href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+                <li class="relative group">
+                    <a class="text-dark hover:underline cursor-pointer">Categories</a>
+                    <ul class="absolute left-0 mt-2 hidden w-48 bg-white rounded-md shadow-lg group-hover:block">
+                        <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'category_summary' %}">All Products</a></li>
+                        <li><hr class="border-gray-300"></li>
+                        <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'category' 'Programming-Books' %}">Programming Books</a></li>
+                        <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'category' 'Marketing-Books' %}">Marketing Books</a></li>
                     </ul>
                 </li>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn bg-dark text-white me-2" type="submit"><a class="nav-link active" aria-current="page" href="{% url 'search' %}">Search</a></button>
-              </form>
-            <form class="d-flex">
-
-<a href="{% url 'cart_summary' %}" class="btn btn-outline-dark"><i class="bi-cart-fill me-1"></i>
-                    Cart
-<span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}
-
-</span></a>
-
-
-                
+            <form class="flex items-center space-x-2">
+                <input class="px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="search" placeholder="Search" aria-label="Search">
+                <button class="bg-black text-white px-3 py-2 rounded-md" type="submit">Search</button>
             </form>
+            <a href="{% url 'cart_summary' %}" class="flex items-center text-dark hover:underline">
+                <svg class="w-0.5 h-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.1 1M7 5h11l4 14H5L4.1 5M5 16h14M7 12h10m-7 4h4"></path>
+                </svg>
+                <span class="ml-1" id="cart_quantity">{{ cart|length }}</span>
+            </a>
         </div>
     </div>
 </nav>
+
+<script>
+    // JavaScript to toggle the navbar on small screens
+    document.getElementById('navbar-toggler').onclick = function () {
+        var navbarContent = document.getElementById('navbar-content');
+        if (navbarContent.classList.contains('hidden')) {
+            navbarContent.classList.remove('hidden');
+        } else {
+            navbarContent.classList.add('hidden');
+        }
+    };
+</script>
+
+<!-- 
+<nav class="bg-warning p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="/" class="text-white font-bold text-xl">AfriConnect</a>
+        <div class="space-x-4">
+            <a href="{% url 'home' %}" class="text-white hover:text-gray-300">Home</a>
+            <a href="{% url 'about' %}" class="text-white hover:text-gray-300">About</a>
+     </div>
+    </div>
+</nav --> 
+
