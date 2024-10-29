@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold my-4">All Products</h1>
+
+    <form method="GET" class="mb-4">
+        <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search for a product..."
+               class="border border-gray-300 rounded-lg p-2 w-full">
+        <button type="submit" class="bg-blue-500 text-white rounded-lg px-4 py-2 mt-2">Search</button>
+    </form>
+
+    {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for product in products %}
+                <div class="border rounded-lg shadow p-4">
+                    <a href="{% url 'product_detail' product.pk %}">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-40 object-cover rounded-t-lg">
+                        <h3 class="text-lg font-bold mt-2">{{ product.name }}</h3>
+                        <p class="text-gray-600">${{ product.price }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-500">No products found.</p>
+    {% endif %}
+</div>
+{% endblock %}

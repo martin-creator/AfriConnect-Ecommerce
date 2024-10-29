@@ -1,10 +1,13 @@
 {% extends 'base.html' %}                    
   
 
-{% block title %}{{ product.name }} - ShopHub{% endblock %}
+{% block title %}{{ product.name }} - AfriConnect{% endblock %}
 
 {% block content %}
 <div class="bg-white">
+    <div id="notification" class="hidden p-4 mb-4 text-sm text-green-800 bg-green-100 rounded-lg" role="alert">
+        <span id="notification-message"></span>
+    </div>
     <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
         <!-- Product details -->
         <div class="lg:max-w-lg lg:self-end">
@@ -12,7 +15,7 @@
                 <ol role="list" class="flex items-center space-x-2">
                     <li>
                         <div class="flex items-center text-sm">
-                            <a href="{% url 'product_list' pk=3 %}" class="font-medium text-gray-500 hover:text-gray-900">Products</a>
+                            <a href="{% url 'product_list' %}" class="font-medium text-gray-500 hover:text-gray-900">Products</a>
                             <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="ml-2 h-5 w-5 flex-shrink-0 text-gray-300">
                                 <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
                             </svg>
@@ -76,21 +79,60 @@
 
         <!-- Add to cart form -->
         <div class="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
-            <form method="post" action="{% url 'add_to_cart' product.id %}">
+            <form id="add-to-cart-form" method="post" action="{% url 'cart_add' %}">
                 {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
                 <div class="mt-10">
                     <div class="flex items-center justify-between">
                         <h2 class="text-sm font-medium text-gray-900">Quantity</h2>
                     </div>
-
                     <div class="mt-4">
-                        <input type="number" name="quantity" value="1" min="1" max="99" class="w-20 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
+                        <input type="number" name="product_qty" value="1" min="1" max="99" class="w-20 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
-
-                <button type="submit" class="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-8 py-3 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Add to cart</button>
+                <button type="button" onclick="addToCart(event)" class="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-8 py-3 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Add to cart</button>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function addToCart(event) {
+    event.preventDefault();
+    
+    const form = document.getElementById('add-to-cart-form');
+    const formData = new FormData(form);
+    
+    fetch("{% url 'cart_add' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'  // This header is important for AJAX
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.qty !== undefined) {
+            // Update cart icon or cart count
+            const cartCountElement = document.getElementById('cart-count'); // Adjust the ID as per your cart icon element
+            cartCountElement.textContent = data.qty; // Update the cart count
+
+            // Show success notification
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            notificationMessage.textContent = "Product added to cart!";
+            notification.classList.remove('hidden');
+            notification.classList.add('block');
+
+            // Optionally hide the notification after a few seconds
+            setTimeout(() => {
+                notification.classList.remove('block');
+                notification.classList.add('hidden');
+            }, 3000); // Change 3000 to the duration in milliseconds you prefer
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+</script>
 {% endblock %}

@@ -27,6 +27,15 @@ class ProductListView(ListView):
     model = Product
     template_name = 'store/product_list.html'  # Specify your template name here
     context_object_name = 'products'  # Default is 'object_list'
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get('search', '')
+        if search_query:
+            queryset = queryset.filter(
+                Q(name__icontains=search_query) | 
+                Q(description__icontains=search_query)
+            )
+        return queryset
     
 def search(request):
 	# Determine if they filled out the form
@@ -70,7 +79,7 @@ def update_info(request):
 
 
 
-def update_password(request):
+def password_reset(request):
 	if request.user.is_authenticated:
 		current_user = request.user
 		# Did they fill out the form
