@@ -1,108 +1,79 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}                    
+  
 
+{% block title %}Billing Information - ShopHub{% endblock %}
 
 {% block content %}
+<div class="bg-gray-50">
+    <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900">Billing Information</h2>
 
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Billing Info</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Enter Your Payment Info...</p>
+        <form class="mt-12 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4" method="POST">
+            {% csrf_token %}
+            <div class="sm:col-span-2">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <div class="mt-1">
+                    <input type="email" id="email" name="email" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" value="{{ user.email }}" required>
                 </div>
             </div>
-        </header>
-        <br/>
-        <div class="container">
-            <div class="row">
-                
-                    <div class="col-md-6 offset-md-3">
-          <div class="card">
-          <div class="card-header">
-            Order Summary
-          </div>
-          <div class="card-body">
-            {% for product in cart_products %}
-                {{ product.name }}: 
-                    {% if product.is_sale %}
-                        ${{ product.sale_price }}
-                    {% else %}
-                        ${{ product.price }}
-                {% endif %}
 
-                <br/>
-                <small>Quantity: 
-                {% for key, value in quantities.items %}
-                    {% if key == product.id|slugify %}
-                        {{ value }}
-                    {% endif %}
-                {% endfor %}</small>
-                <br/><br/>
-
-            {% endfor %}
-            Total:  ${{ totals }}
-            <br/><br/>
-            <a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary">Update Items</a>
-          </div>
-        </div>
-<br/><br/>
-<div class="card">
-  <div class="card-header">
-    Shipping Info
-  </div>
-  <div class="card-body">
-    
-    Name: {{ shipping_info.shipping_full_name }}<br/>
-    Email: {{ shipping_info.shipping_email }}<br/>
-    Address 1: {{ shipping_info.shipping_address1 }}<br/>
-    Address 2: {{ shipping_info.shipping_address2 }}<br/>
-    City: {{ shipping_info.shipping_city }}<br/>
-    State: {{ shipping_info.shipping_state }}<br/>
-    Zipcode: {{ shipping_info.shipping_zipcode }}<br/>
-    Country: {{ shipping_info.shipping_country }}<br/>
-    <br/>
-    <a href="{% url 'checkout' %}" class="btn btn-outline-secondary">Update Shipping</a>
-
-  </div>
-</div>
-<br/><br/>
-
-<center>
-    {{ paypal_form.render }}
-</center>
-
-<br/><br/>
-
-
-<div class="card">
-  <div class="card-header">
-    Billing Info
-  </div>
-  <div class="card-body">
-    <form method="POST" action="{% url 'process_order' %}">
-      {% csrf_token %}
-    {{ billing_form.as_p }}
-    
-  </div>
-</div>
-<br/>
-
-
-
-<button type="submit" class="btn btn-secondary">
-  Pay Now
-</button>
-</form>
-<br/><br/>
-
-
+            <div class="sm:col-span-2">
+                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                <div class="mt-1">
+                    <input type="text" id="name" name="name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                </div>
             </div>
-        </div>
+
+            <div class="sm:col-span-2">
+                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                <div class="mt-1">
+                    <input type="text" id="address" name="address" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                </div>
+            </div>
+
+            <div>
+                <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                <div class="mt-1">
+                    <input type="text" id="city" name="city" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                </div>
+            </div>
+
+            <div>
+                <label for="state" class="block text-sm font-medium text-gray-700">State / Province</label>
+                <div class="mt-1">
+                    <input type="text" id="state" name="state" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                </div>
+            </div>
+
+            <div>
+                <label for="postal_code" class="block text-sm font-medium text-gray-700">Postal code</label>
+                <div class="mt-1">
+                    <input type="text" id="postal_code" name="postal_code" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                </div>
+            </div>
+
+            <div>
+                <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                <div class="mt-1">
+                    <select id="country" name="country" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="GB">United Kingdom</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                <div class="mt-1">
+                    <input type="tel" id="phone" name="phone" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                </div>
+            </div>
+
+            <div class="sm:col-span-2">
+                <button type="submit" class="w-full rounded-md border border-transparent bg-blue-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50">Continue to Payment</button>
+            </div>
+        </form>
     </div>
-
-
-
-
-
-
+</div>
 {% endblock %}

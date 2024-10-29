@@ -13,8 +13,21 @@ from django import forms
 from django.db.models import Q
 import json
 from cart.cart import Cart
+from django.views.generic import ListView, DetailView
 
 
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'store/product_detail.html'  # Specify your template name here
+    context_object_name = 'product'  # Default is 'object'
+
+class ProductListView(ListView):
+    model = Product
+    template_name = 'store/product_list.html'  # Specify your template name here
+    context_object_name = 'products'  # Default is 'object_list'
+    
 def search(request):
 	# Determine if they filled out the form
 	if request.method == "POST":

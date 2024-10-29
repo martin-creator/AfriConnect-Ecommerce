@@ -1,79 +1,73 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}                    
+  
 
+{% block title %}Payment - ShopHub{% endblock %}
 
 {% block content %}
+<div class="bg-gray-50">
+    <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900">Payment Information</h2>
 
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Checkout</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Review Your Order...</p>
+        <form class="mt-12" method="POST">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                <div class="sm:col-span-2">
+                    <label for="card-number" class="block text-sm font-medium text-gray-700">Card number</label>
+                    <div class="mt-1">
+                        <input type="text" id="card-number" name="card-number" placeholder="1234 1234 1234 1234" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="expiration" class="block text-sm font-medium text-gray-700">Expiration date (MM/YY)</label>
+                    <div class="mt-1">
+                        <input type="text" id="expiration" name="expiration" placeholder="MM/YY" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="cvc" class="block text-sm font-medium text-gray-700">CVC</label>
+                    <div class="mt-1">
+                        <input type="text" id="cvc" name="cvc" placeholder="123" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                    </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name on card</label>
+                    <div class="mt-1">
+                        <input type="text" id="name" name="name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                    </div>
                 </div>
             </div>
-        </header>
-        <br/>
-        <div class="container">
-            <div class="row">
-                
-                    <div class="col-md-6 offset-md-3">
-          <div class="card">
-          <div class="card-header">
-            Order Summary
-          </div>
-          <div class="card-body">
-            {% for product in cart_products %}
-                {{ product.name }}: 
-                    {% if product.is_sale %}
-                        ${{ product.sale_price }}
-                    {% else %}
-                        ${{ product.price }}
-                {% endif %}
 
-                <br/>
-                <small>Quantity: 
-                {% for key, value in quantities.items %}
-                    {% if key == product.id|slugify %}
-                        {{ value }}
-                    {% endif %}
-                {% endfor %}</small>
-                <br/><br/>
+            <!-- Order summary -->
+            <div class="mt-10 border-t border-gray-200 pt-10">
+                <h3 class="text-lg font-medium text-gray-900">Order summary</h3>
 
-            {% endfor %}
-            Total:  ${{ totals }}
-            <br/><br/>
-            <a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary">Update Items</a>
-          </div>
-        </div>
-<br/><br/>
-<div class="card">
-  <div class="card-header">
-    Shipping Info
-  </div>
-  <div class="card-body">
-    <form method="POST" action="{% url 'billing_info' %}">
-        {% csrf_token %}
-    {{ shipping_form.as_p }}
-
-  </div>
-</div>
-<br/>
-
-<button type="submit" class="btn btn-secondary">
-        Continue To Billing
-</button>
-
-</form>
-<br/><br/>
-
-
+                <dl class="mt-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <dt class="text-sm text-gray-600">Subtotal</dt>
+                        <dd class="text-sm font-medium text-gray-900">${{ subtotal }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <dt class="text-sm text-gray-600">Shipping</dt>
+                        <dd class="text-sm font-medium text-gray-900">${{ shipping }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <dt class="text-sm text-gray-600">Tax</dt>
+                        <dd class="text-sm font-medium text-gray-900">${{ tax }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
+                        <dt class="text-base font-medium text-gray-900">Order total</dt>
+                        <dd class="text-base font-medium text-gray-900">${{ total }}</dd>
+                    </div>
+                </dl>
             </div>
-        </div>
+
+            <div class="mt-10">
+                <button type="submit" class="w-full rounded-md border border-transparent bg-blue-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50">Place Order</button>
+            </div>
+        </form>
     </div>
-
-
-
-
-
-
+</div>
 {% endblock %}
