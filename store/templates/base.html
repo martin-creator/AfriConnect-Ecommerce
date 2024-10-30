@@ -10,6 +10,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
     {% block extra_css %}{% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentLocation = window.location.pathname;
+            const menuItems = document.querySelectorAll('.nav-link');
+    
+            menuItems.forEach(item => {
+                if (item.getAttribute('href') === currentLocation) {
+                    item.classList.add('text-blue-700');
+                    item.classList.add('active'); // For CSS if needed
+                } else {
+                    item.classList.remove('text-blue-700');
+                    item.classList.remove('active'); // For CSS if needed
+                }
+            });
+        });
+    </script>
 </head>
 <body class="bg-gray-50">
     {% include 'navbar.html' %}
