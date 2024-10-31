@@ -122,16 +122,16 @@ def category_summary(request):
 	categories = Category.objects.all()
 	return render(request, 'category_summary.html', {"categories":categories})	
 
-def category(request, foo):
+def category(request, category):
 	# Replace Hyphens with Spaces
-	foo = foo.replace('-', ' ')
+	category = category.replace('-', ' ')
 	# Grab the category from the url
 	try:
 		# Look Up The Category
-		category = Category.objects.get(name=foo)
+		category = Category.objects.get(name=category)
 		products = Product.objects.filter(category=category)
 		return render(request, 'category.html', {'products':products, 'category':category})
-	except:
+	except Category.DoesNotExist:
 		messages.success(request, ("That Category Doesn't Exist..."))
 		return redirect('home')
 
@@ -147,7 +147,9 @@ def home(request):
 
 
 def about(request):
-	return render(request, 'about.html', {})	
+	return render(request, 'about.html', {})
+
+
 
 def login_user(request):
 	if request.method == "POST":

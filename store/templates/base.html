@@ -1,12 +1,10 @@
-<!DOCTYPE html>                    
-                      
-  
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}AfriConnect {% endblock %}</title>
+    <title>{% block title %}AfriConnect{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
     {% block extra_css %}{% endblock %}
@@ -48,13 +46,6 @@
                 };
             </script>
         {% endif %}
-        <!-- {% if messages %}
-            {% for message in messages %}
-                <div class="p-4 mb-4 text-sm rounded-lg {% if message.tags == 'success' %}text-green-800 bg-green-50{% else %}text-red-800 bg-red-50{% endif %}" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %} -->
         
         {% block content %}{% endblock %}
     </main>
@@ -80,6 +71,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
-
 </html>
-
