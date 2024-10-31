@@ -102,3 +102,68 @@ def cart_update(request):
 
         response = JsonResponse({'qty': product_qty})
         return response
+    
+def cart_view(request):
+    cart_products = Cart.objects.all()  # Adjust as needed to get the user's cart
+    quantities = {item.product.id: item.quantity for item in cart_products}
+    
+    subtotal = sum(item.product.price * item.quantity for item in cart_products)
+    
+    context = {
+        'cart_products': cart_products,
+        'quantities': quantities,
+        'subtotal': subtotal,
+    }
+    return render(request, 'cart.html', context)
+
+def checkout_view(request):
+    cart_products = Cart.objects.all()  # Adjust as needed to get the user's cart
+    subtotal = sum(item.product.price * item.quantity for item in cart_products)
+    shipping = 10  # Example shipping cost
+    tax = subtotal * 0.1  # Example tax rate (10%)
+    total = subtotal + shipping + tax
+    
+    context = {
+        'subtotal': subtotal,
+        'shipping': shipping,
+        'tax': tax,
+        'total': total,
+    }
+    return render(request, 'checkout.html', context)
+
+def place_order_view(request):
+    cart_products = Cart.objects.all()  # Adjust as needed to get the user's cart
+    if not cart_products:
+        messages.error(request, "Your cart is empty!")
+        return redirect('cart')
+
+    # Calculate totals
+    subtotal = sum(item.product.price * item.quantity for item in cart_products)
+    shipping = 10  # Example shipping cost
+    tax = subtotal * 0.1  # Example tax rate (10%)
+    total = subtotal + shipping + tax
+
+    # Create the order
+    order = Order.objects.create(
+        user=request.user,  # Assuming you have a user associated with the order
+        subtotal=subtotal,
+        shipping=shipping,
+        tax=tax,
+        total=total
+    )
+
+    # Create order items
+    for item in cart_products:
+        OrderItem.objects.create(
+            order=order,
+            product=item.product,
+            quantity=item.quantity,
+            price=item.product.price,
+            total=item.product.price * item.quantity
+        )
+
+    # Clear the cart
+    cart_products.delete()
+
+    messages.success(request, "Your order has been placed successfully!")
+    return redirect('order_confirmation', order_id=order.id)
