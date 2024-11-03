@@ -1,6 +1,11 @@
 from django.urls import path
+
+from ecom import settings
 from . import views
 from .views import ProductListView, ProductDetailView
+
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -16,4 +21,6 @@ urlpatterns = [
     path('categories/<str:category>', views.category, name='category'),
     path('category_summary/', views.category_summary, name='category_summary'),
     path('search/', views.search, name='search'),
-]
+    path('profile/', views.profile, name='profile'),
+    path('orders/', views.orders, name='orders'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

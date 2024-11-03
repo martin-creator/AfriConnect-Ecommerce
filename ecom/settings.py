@@ -10,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load our environmental variables
 # load_dotenv()
 
+# AUTH_USER_MODEL = 'ecom.CustomUser'
 
 
 # password DB
