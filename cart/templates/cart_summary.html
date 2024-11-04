@@ -1,66 +1,62 @@
 <!-- cart_summary.html -->
 {% extends 'base.html' %}
 
+{% load cart_extras %}
+
 {% block title %}Shopping Cart - AfriConnect{% endblock %}
 
 {% block content %}
-<div class="bg-white">
-    <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+<div class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-8">Shopping Cart</h1>
         
-        <div id="cart-summary">
+        <div id="cart-summary" class="bg-white shadow-md rounded-lg p-6">
             {% if empty_message %}
-                <p>{{ empty_message }}</p>
+                <p class="text-lg text-gray-600">{{ empty_message }}</p>
             {% else %}
-                <ul class="divide-y divide-gray-200 border-b border-t border-gray-200">
-                    {% for item in cart_products %}
-                        <li class="flex py-6 sm:py-10">
-                            <!-- <div class="flex-shrink-0">
-                                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48">
-                            </div> -->
-                            <div class="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                                <div class="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                                    <div>
-                                        <div class="flex justify-between">
-                                            <h3 class="text-sm">
-                                                <a href="{% url 'product_detail' item.id %}" class="font-medium text-gray-700 hover:text-gray-800">{{ item.name }}</a>
-                                            </h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for product in cart_products %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <form action="{% url 'cart_update' product.id %}" method="post" class="inline-block">
+                                            {% csrf_token %}
+                                            <input type="number" id="quantity-{{ product.id }}" name="quantity" value="{{ quantities|get_item:product.id }}" min="1" class="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ product.price }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            {{ product.price|multiply:quantities|get_item:product.id }}
                                         </div>
-                                        <p class="mt-1 text-sm text-gray-500">Category: {{ item.category }}</p>
-                                        <p class="mt-1 text-sm text-gray-500">Price: ${{ item.price }}</p>
-                                    </div>
-                                    <div class="mt-4 sm:mt-0 sm:pr-9">
-                                        <label for="quantity-{{ item.id }}" class="sr-only">Quantity, {{ item.quantity }}</label>
-                                        <select id="quantity-{{ item.id }}" name="quantity-{{ item.id }}" class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
-                                            {% for i in "123456789" %}
-                                                <option value="{{ forloop.counter }}" {% if item.quantity == forloop.counter %}selected{% endif %}>{{ forloop.counter }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <p class="mt-4 flex space-x-2 text-sm text-gray-700">
-                                    <svg class="h-5 w-5 flex-shrink-0 text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
-                                    </svg>
-                                    <span>In stock</span>
-                                </p>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-                
-                <div class="mt-6">
-                    <h2 class="text-lg font-medium text-gray-900">Order summary</h2>
-                    <div class="mt-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Subtotal</span>
-                            <span class="text-sm font-medium text-gray-900">${{ subtotal }}</span>
-                        </div>
-                        <!-- Add other totals here -->
-                    </div>
-                    <div class="mt-6">
-                        <a href="{% url 'checkout' %}" class="w-full rounded-md border border-transparent bg-blue-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50">Checkout</a>
-                    </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                        </tbody>
+                        
+                    </table>
+                </div>
+                <div class="mt-8 flex justify-between items-center">
+                    <p class="text-xl font-semibold text-gray-900">Subtotal: {{ subtotal }}</p>
+                    <a href="{% url 'checkout' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Proceed to Checkout</a>
                 </div>
             {% endif %}
         </div>
@@ -76,7 +72,6 @@
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
@@ -110,9 +105,10 @@
     });
 
     document.querySelectorAll('.update-cart-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.dataset.productId;
-            const productQty = document.getElementById(`quantity-${productId}`).value;
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            const productId = this.closest('form').dataset.productId; // Get product ID from the form
+            const productQty = document.getElementById(`quantity-${productId}`).value; // Get quantity
 
             fetch('/cart/update/', {
                 method: 'POST',
@@ -126,11 +122,12 @@
             .then(data => {
                 if (data.qty) {
                     document.getElementById('cart-count').innerText = data.qty;
-                    updateCartSummary();
+                    updateCartSummary(); // Call the function to update the cart summary
                 }
             });
         });
     });
+
 
     function updateCartSummary() {
         fetch('/cart/summary/')

@@ -244,41 +244,51 @@ def billing_info(request):
 			# Not logged in
 			# Get The Billing Form
 			billing_form = PaymentForm()
-			return render(request, "payment/billing_info.html", {"paypal_form":paypal_form, "cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_info":request.POST, "billing_form":billing_form})
+			return render(request, "billing_info.html", {"paypal_form":paypal_form, "cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_info":request.POST, "billing_form":billing_form})
 
 
 		
 		shipping_form = request.POST
-		return render(request, "payment/billing_info.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form})	
+		return render(request, "billing_info.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form})	
 	else:
 		messages.success(request, "Access Denied")
 		return redirect('home')
 
 
-def checkout(request):
-	# Get the cart
-	cart = Cart(request)
-	cart_products = cart.get_prods
-	quantities = cart.get_quants
-	totals = cart.cart_total()
+from decimal import Decimal
 
-	if request.user.is_authenticated:
-		# Checkout as logged in user
-		# Shipping User
-		shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
-		# Shipping Form
-		shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
-		return render(request, "payment/checkout.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form })
-	else:
-		# Checkout as guest
-		shipping_form = ShippingForm(request.POST or None)
-		return render(request, "payment/checkout.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals, "shipping_form":shipping_form})
+def checkout(request): 
+    cart = Cart(request)
+    cart_products = cart.get_products()
+    quantities = cart.get_quantities()
+    subtotal = cart.get_subtotal()
+    shipping_cost = Decimal('10.00')  # Ensure this is a Decimal
+
+    # Add other costs like taxes if needed
+    total = subtotal + shipping_cost  
+
+    if request.user.is_authenticated:
+        # Checkout as logged in user
+        shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
+    else:
+        # Checkout as guest
+        shipping_form = ShippingForm(request.POST or None)
+
+    return render(request, "checkout.html", {
+        "cart_products": cart_products,
+        "quantities": quantities,
+        "subtotal": subtotal,
+        "shipping_cost": shipping_cost,
+        "total": total,
+        "shipping_form": shipping_form
+    })
 
 	
 
 def payment_success(request):
-	return render(request, "payment/payment_success.html", {})
+	return render(request, "payment_success.html", {})
 
 
 def payment_failed(request):
-	return render(request, "payment/payment_failed.html", {})
+	return render(request, "payment_failed.html", {})
