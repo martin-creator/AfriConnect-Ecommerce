@@ -6,36 +6,48 @@ from django.dispatch import receiver
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
+# models.py
+from django.db import models
+from django.contrib.auth.models import User
 
-# Create Customer Profile
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
-    date_modified = models.DateTimeField(auto_now=True)
     phone = models.CharField(max_length=20, blank=True)
-    address1 = models.CharField(max_length=200, blank=True)
-    address2 = models.CharField(max_length=200, blank=True)
-    city = models.CharField(max_length=200, blank=True)
-    state = models.CharField(max_length=200, blank=True)
-    zipcode = models.CharField(max_length=200, blank=True)
-    country = models.CharField(max_length=200, blank=True)
-    old_cart = models.CharField(max_length=200, blank=True, null=True)
+    address1 = models.CharField(max_length=255, blank=True)
+    address2 = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=100, blank=True)
+    zipcode = models.CharField(max_length=20, blank=True)
+    country = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.user.username
 
-# Create a user Profile by default when user signs up
-    
-@receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-    if created:
-        user_profile = Profile(user=instance)
-        user_profile.save()
-        print(f"Profile created for user {instance.username}")
 
-# Ensure the profile is updated
+# Create Customer Profile
+# class Profile(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+#     date_modified = models.DateTimeField(auto_now=True)
+#     phone = models.CharField(max_length=20, blank=True)
+#     address1 = models.CharField(max_length=200, blank=True)
+#     address2 = models.CharField(max_length=200, blank=True)
+#     city = models.CharField(max_length=200, blank=True)
+#     state = models.CharField(max_length=200, blank=True)
+#     zipcode = models.CharField(max_length=200, blank=True)
+#     country = models.CharField(max_length=200, blank=True)
+#     old_cart = models.CharField(max_length=200, blank=True, null=True)
+
+#     def __str__(self):
+#         return self.user.username
+
+# Create or update user Profile when user is saved
 @receiver(post_save, sender=User)
-def save_profile(sender, instance, **kwargs):
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+        print(f"Profile created for user {instance.username}")
     instance.profile.save()
 
 

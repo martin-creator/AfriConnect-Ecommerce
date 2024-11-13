@@ -16,6 +16,10 @@ from cart.cart import Cart
 from django.views.generic import ListView, DetailView
 
 
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView
+from .models import Product, Category
+
 
 
 class ProductDetailView(DetailView):
@@ -23,19 +27,30 @@ class ProductDetailView(DetailView):
     template_name = 'store/product_detail.html'  # Specify your template name here
     context_object_name = 'product'  # Default is 'object'
 
+
 class ProductListView(ListView):
     model = Product
-    template_name = 'store/product_list.html'  # Specify your template name here
-    context_object_name = 'products'  # Default is 'object_list'
+    template_name = 'product_list.html'
+    context_object_name = 'products'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.filter(name__in=['Programming Books', 'Marketing Books'])
+        return context
+
     def get_queryset(self):
         queryset = super().get_queryset()
         search_query = self.request.GET.get('search', '')
+        category_id = self.request.GET.get('category', '')
+
         if search_query:
-            queryset = queryset.filter(
-                Q(name__icontains=search_query) | 
-                Q(description__icontains=search_query)
-            )
+            queryset = queryset.filter(name__icontains=search_query)
+        
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+
         return queryset
+
     
 def search(request):
 	# Determine if they filled out the form
@@ -166,7 +181,7 @@ def login_user(request):
         if user is not None:
             login(request, user)
             messages.success(request, "You Have Been Logged In!")
-            return redirect('home')
+            return redirect('profile')
         else:
             messages.error(request, "There was an error, please try again...")
     return render(request, 'login.html', {})
@@ -180,30 +195,45 @@ def logout_user(request):
 
 
 def register_user(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            messages.success(request, "Username Created - Please Fill Out Your User Info Below...")
-            return redirect('update_info')
+            user = form.save()
+            phone = form.cleaned_data.get('phone')
+            address1 = form.cleaned_data.get('address1')
+            address2 = form.cleaned_data.get('address2')
+            city = form.cleaned_data.get('city')
+            state = form.cleaned_data.get('state')
+            zipcode = form.cleaned_data.get('zipcode')
+            country = form.cleaned_data.get('country')
+
+            try:
+                # Create a profile for the new user
+                profile, created = Profile.objects.get_or_create(
+                    user=user,
+                    defaults={
+                        'phone': phone,
+                        'address1': address1,
+                        'address2': address2,
+                        'city': city,
+                        'state': state,
+                        'zipcode': zipcode,
+                        'country': country,
+                    }
+                )
+                if created:
+                    print('Profile created for user')
+                else:
+                    print('Profile already exists for user')
+                    
+                login(request, user)  # Log the user in after registration
+                return redirect('profile')  # Redirect to profile page
+            except IntegrityError:
+                form.add_error(None, 'A profile already exists for this user.')
+                return render(request, 'register.html', {'form': form, 'error': 'A profile already exists for this user.'})
         else:
-            messages.error(request, "Whoops! There was a problem Registering, please try again...")
+            print(form.errors)  # Print form errors to the console for debugging
+            return render(request, 'register.html', {'form': form, 'error': 'Whoops! There was a problem Registering, please try again...'})
     else:
         form = SignUpForm()
     return render(request, 'register.html', {'form': form})
-
-def profile(request):
-    profile = request.user.profile
-    if request.method == 'POST':
-        form = ProfilePhotoForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile photo updated successfully.')
-            return redirect('profile')
-    else:
-        form = ProfilePhotoForm(instance=profile)
-    return render(request, 'profile.html', {'form': form, 'profile': profile})

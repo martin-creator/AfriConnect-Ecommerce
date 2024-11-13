@@ -16,33 +16,33 @@
                         <input type="text" id="card-number" name="card-number" placeholder="1234 1234 1234 1234" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
                     </div>
                 </div>
-
-                <div>
+        
+                <div class="mt-6">
                     <label for="expiration" class="block text-sm font-medium text-gray-700">Expiration date (MM/YY)</label>
                     <div class="mt-1">
                         <input type="text" id="expiration" name="expiration" placeholder="MM/YY" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
                     </div>
                 </div>
-
-                <div>
+        
+                <div class="mt-6">
                     <label for="cvc" class="block text-sm font-medium text-gray-700">CVC</label>
                     <div class="mt-1">
                         <input type="text" id="cvc" name="cvc" placeholder="123" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
                     </div>
                 </div>
-
-                <div class="sm:col-span-2">
+        
+                <div class="sm:col-span-2 mt-6">
                     <label for="name" class="block text-sm font-medium text-gray-700">Name on card</label>
                     <div class="mt-1">
                         <input type="text" id="name" name="name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
                     </div>
                 </div>
             </div>
-
+        
             <!-- Order summary -->
             <div class="mt-10 border-t border-gray-200 pt-10">
                 <h3 class="text-lg font-medium text-gray-900">Order summary</h3>
-
+        
                 <dl class="mt-6 space-y-4">
                     <div class="flex items-center justify-between">
                         <dt class="text-sm text-gray-600">Subtotal</dt>
@@ -58,11 +58,12 @@
                     </div>
                 </dl>
             </div>
-
+        
             <div class="mt-10">
                 <button type="submit" class="w-full rounded-md border border-transparent bg-blue-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50">Place Order</button>
             </div>
         </form>
+        
     </div>
 </div>
 {% endblock %}
